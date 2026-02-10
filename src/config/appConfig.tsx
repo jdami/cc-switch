@@ -1,6 +1,11 @@
 import React from "react";
 import type { AppId } from "@/lib/api/types";
-import { ClaudeIcon, CodexIcon, GeminiIcon } from "@/components/BrandIcons";
+import {
+  ClaudeIcon,
+  CodexIcon,
+  GeminiIcon,
+  AntigravityIcon,
+} from "@/components/BrandIcons";
 import { ProviderIcon } from "@/components/ProviderIcon";
 
 export interface AppConfig {
@@ -60,14 +65,7 @@ export const APP_ICON_MAP: Record<AppId, AppConfig> = {
   },
   antigravity: {
     label: "Antigravity",
-    icon: (
-      <ProviderIcon
-        icon="antigravity"
-        name="Antigravity"
-        size={14}
-        showFallback={false}
-      />
-    ),
+    icon: <AntigravityIcon size={14} />,
     activeClass:
       "bg-purple-500/10 ring-1 ring-purple-500/20 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400",
     badgeClass:
