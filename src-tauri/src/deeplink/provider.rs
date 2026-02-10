@@ -146,6 +146,7 @@ pub(crate) fn build_provider_from_request(
         AppType::Codex => build_codex_settings(request),
         AppType::Gemini => build_gemini_settings(request),
         AppType::OpenCode => build_opencode_settings(request),
+        AppType::Antigravity => build_gemini_settings(request), // Fallback to Gemini
     };
 
     // Build usage script configuration if provided
@@ -452,6 +453,7 @@ pub fn parse_and_merge_config(
         "claude" => merge_claude_config(&mut merged, &config_value)?,
         "codex" => merge_codex_config(&mut merged, &config_value)?,
         "gemini" => merge_gemini_config(&mut merged, &config_value)?,
+        "antigravity" => merge_gemini_config(&mut merged, &config_value)?, // Fallback
         "" => {
             // No app specified, skip merging
             return Ok(merged);

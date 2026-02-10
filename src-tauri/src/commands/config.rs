@@ -59,6 +59,15 @@ pub async fn get_config_status(app: String) -> Result<ConfigStatus, String> {
 
             Ok(ConfigStatus { exists, path })
         }
+        AppType::Antigravity => {
+            let home = dirs::home_dir().unwrap_or_default();
+            let path = home.join(".gemini").join("antigravity");
+            let exists = path.exists();
+            Ok(ConfigStatus {
+                exists,
+                path: path.to_string_lossy().to_string(),
+            })
+        }
     }
 }
 
@@ -74,6 +83,12 @@ pub async fn get_config_dir(app: String) -> Result<String, String> {
         AppType::Codex => codex_config::get_codex_config_dir(),
         AppType::Gemini => crate::gemini_config::get_gemini_dir(),
         AppType::OpenCode => crate::opencode_config::get_opencode_dir(),
+        AppType::Antigravity => {
+            dirs::home_dir()
+                .unwrap_or_default()
+                .join(".gemini")
+                .join("antigravity")
+        }
     };
 
     Ok(dir.to_string_lossy().to_string())
@@ -86,6 +101,12 @@ pub async fn open_config_folder(handle: AppHandle, app: String) -> Result<bool, 
         AppType::Codex => codex_config::get_codex_config_dir(),
         AppType::Gemini => crate::gemini_config::get_gemini_dir(),
         AppType::OpenCode => crate::opencode_config::get_opencode_dir(),
+        AppType::Antigravity => {
+            dirs::home_dir()
+                .unwrap_or_default()
+                .join(".gemini")
+                .join("antigravity")
+        }
     };
 
     if !config_dir.exists() {

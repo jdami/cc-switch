@@ -1,6 +1,7 @@
 mod app_config;
 mod app_store;
 mod auto_launch;
+mod antigravity_config;
 mod claude_mcp;
 mod claude_plugin;
 mod codex_config;
@@ -36,10 +37,11 @@ pub use database::Database;
 pub use deeplink::{import_provider_from_deeplink, parse_deeplink_url, DeepLinkImportRequest};
 pub use error::AppError;
 pub use mcp::{
-    import_from_claude, import_from_codex, import_from_gemini, remove_server_from_claude,
-    remove_server_from_codex, remove_server_from_gemini, sync_enabled_to_claude,
-    sync_enabled_to_codex, sync_enabled_to_gemini, sync_single_server_to_claude,
-    sync_single_server_to_codex, sync_single_server_to_gemini,
+    import_from_antigravity, import_from_claude, import_from_codex, import_from_gemini,
+    remove_server_from_antigravity, remove_server_from_claude, remove_server_from_codex,
+    remove_server_from_gemini, sync_enabled_to_antigravity, sync_enabled_to_claude,
+    sync_enabled_to_codex, sync_enabled_to_gemini, sync_single_server_to_antigravity,
+    sync_single_server_to_claude, sync_single_server_to_codex, sync_single_server_to_gemini,
 };
 pub use provider::{Provider, ProviderMeta};
 pub use services::{
@@ -452,6 +454,7 @@ pub fn run() {
                 crate::app_config::AppType::Claude,
                 crate::app_config::AppType::Codex,
                 crate::app_config::AppType::Gemini,
+                crate::app_config::AppType::Antigravity,
             ] {
                 match crate::services::provider::ProviderService::import_default_config(
                     &app_state,
@@ -560,6 +563,14 @@ pub fn run() {
                     Ok(_) => log::debug!("○ No OpenCode MCP servers found to import"),
                     Err(e) => log::warn!("✗ Failed to import OpenCode MCP: {e}"),
                 }
+
+                match crate::services::mcp::McpService::import_from_antigravity(&app_state) {
+                    Ok(count) if count > 0 => {
+                        log::info!("✓ Imported {count} MCP server(s) from Antigravity");
+                    }
+                    Ok(_) => log::debug!("○ No Antigravity MCP servers found to import"),
+                    Err(e) => log::warn!("✗ Failed to import Antigravity MCP: {e}"),
+                }
             }
 
             // 4. 导入提示词文件（表空时触发）
@@ -570,6 +581,7 @@ pub fn run() {
                     crate::app_config::AppType::Claude,
                     crate::app_config::AppType::Codex,
                     crate::app_config::AppType::Gemini,
+                    crate::app_config::AppType::Antigravity,
                 ] {
                     match crate::services::prompt::PromptService::import_from_file_on_first_launch(
                         &app_state,
@@ -1147,7 +1159,7 @@ pub async fn cleanup_before_exit(app_handle: &tauri::AppHandle) {
 async fn restore_proxy_state_on_startup(state: &store::AppState) {
     // 收集需要恢复接管的应用列表（从 proxy_config.enabled 读取）
     let mut apps_to_restore = Vec::new();
-    for app_type in ["claude", "codex", "gemini"] {
+    for app_type in ["claude", "codex", "gemini", "antigravity"] {
         if let Ok(config) = state.db.get_proxy_config_for_app(app_type).await {
             if config.enabled {
                 apps_to_restore.push(app_type);

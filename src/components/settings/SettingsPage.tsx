@@ -309,6 +309,7 @@ export function SettingsPage({
                             codexDir={settings.codexConfigDir}
                             geminiDir={settings.geminiConfigDir}
                             opencodeDir={settings.opencodeConfigDir}
+                            antigravityDir={settings.antigravityConfigDir}
                             onDirectoryChange={updateDirectory}
                             onBrowseDirectory={browseDirectory}
                             onResetDirectory={resetDirectory}

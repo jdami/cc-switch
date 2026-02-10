@@ -14,9 +14,14 @@ mod claude;
 mod codex;
 mod gemini;
 mod opencode;
+mod antigravity;
 mod validation;
 
 // 重新导出公共 API
+pub use antigravity::{
+    import_from_antigravity, remove_server_from_antigravity, sync_enabled_to_antigravity,
+    sync_single_server_to_antigravity,
+};
 pub use claude::{
     import_from_claude, remove_server_from_claude, sync_enabled_to_claude,
     sync_single_server_to_claude,

@@ -287,7 +287,8 @@
       "claudeDesc": "Anthropic Claude Code CLI",
       "codexDesc": "OpenAI Codex CLI",
       "geminiDesc": "Google Gemini CLI",
-      "opencodeDesc": "OpenCode CLI"
+      "opencodeDesc": "OpenCode CLI",
+      "antigravityDesc": "Antigravity CLI"
     },
     "skillSync": {
       "title": "Skill Sync Method",
@@ -337,10 +338,13 @@
     "geminiConfigDirDescription": "Override Gemini configuration directory (.env).",
     "opencodeConfigDir": "OpenCode Configuration Directory",
     "opencodeConfigDirDescription": "Override OpenCode configuration directory (opencode.json).",
+    "antigravityConfigDir": "Antigravity Configuration Directory",
+    "antigravityConfigDirDescription": "Override Antigravity configuration directory.",
     "browsePlaceholderClaude": "e.g., /home/<your-username>/.claude",
     "browsePlaceholderCodex": "e.g., /home/<your-username>/.codex",
     "browsePlaceholderGemini": "e.g., /home/<your-username>/.gemini",
     "browsePlaceholderOpencode": "e.g., /home/<your-username>/.config/opencode",
+    "browsePlaceholderAntigravity": "e.g., /home/<your-username>/.gemini/antigravity",
     "browseDirectory": "Browse Directory",
     "resetDefault": "Reset to default directory (takes effect after saving)",
     "checkForUpdates": "Check for Updates",
@@ -405,7 +409,8 @@
     "claude": "Claude",
     "codex": "Codex",
     "gemini": "Gemini",
-    "opencode": "OpenCode"
+    "opencode": "OpenCode",
+    "antigravity": "Antigravity"
   },
   "sessionManager": {
     "title": "Session Manager",
@@ -854,7 +859,8 @@
         "claude": "Claude",
         "codex": "Codex",
         "gemini": "Gemini",
-        "opencode": "OpenCode"
+        "opencode": "OpenCode",
+        "antigravity": "Antigravity"
       }
     },
     "userLevelPath": "User-level MCP path",
@@ -1169,7 +1175,8 @@
       "claude": "Claude",
       "codex": "Codex",
       "gemini": "Gemini",
-      "opencode": "OpenCode"
+      "opencode": "OpenCode",
+      "antigravity": "Antigravity"
     },
     "installFromZip": {
       "button": "Install from ZIP",

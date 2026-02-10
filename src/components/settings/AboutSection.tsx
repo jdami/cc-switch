@@ -318,7 +318,9 @@ export function AboutSection({ isPortable }: AboutSectionProps) {
           </Button>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 px-1">
-          {["claude", "codex", "gemini", "opencode"].map((toolName, index) => {
+                        {["claude", "codex", "gemini", "opencode", "antigravity"].map(
+                          (toolName, index) => {
+          
             const tool = toolVersions.find((item) => item.name === toolName);
             // Special case for OpenCode (capital C), others use capitalize
             const displayName =

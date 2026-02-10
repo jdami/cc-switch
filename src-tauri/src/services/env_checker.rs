@@ -37,6 +37,7 @@ fn get_keywords_for_app(app: &str) -> Vec<&str> {
         "claude" => vec!["ANTHROPIC"],
         "codex" => vec!["OPENAI"],
         "gemini" => vec!["GEMINI", "GOOGLE_GEMINI"],
+        "antigravity" => vec!["GEMINI", "GOOGLE_GEMINI", "ANTIGRAVITY"],
         _ => vec![],
     }
 }

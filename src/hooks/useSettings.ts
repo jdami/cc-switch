@@ -110,6 +110,7 @@ export function useSettings(): UseSettingsResult {
       sanitizeDir(data?.codexConfigDir),
       sanitizeDir(data?.geminiConfigDir),
       sanitizeDir(data?.opencodeConfigDir),
+      sanitizeDir(data?.antigravityConfigDir),
     );
     setRequiresRestart(false);
   }, [
@@ -135,6 +136,9 @@ export function useSettings(): UseSettingsResult {
         const sanitizedOpencodeDir = sanitizeDir(
           mergedSettings.opencodeConfigDir,
         );
+        const sanitizedAntigravityDir = sanitizeDir(
+          mergedSettings.antigravityConfigDir,
+        );
 
         const payload: Settings = {
           ...mergedSettings,
@@ -142,6 +146,7 @@ export function useSettings(): UseSettingsResult {
           codexConfigDir: sanitizedCodexDir,
           geminiConfigDir: sanitizedGeminiDir,
           opencodeConfigDir: sanitizedOpencodeDir,
+          antigravityConfigDir: sanitizedAntigravityDir,
           language: mergedSettings.language,
         };
 
@@ -246,11 +251,15 @@ export function useSettings(): UseSettingsResult {
         const sanitizedOpencodeDir = sanitizeDir(
           mergedSettings.opencodeConfigDir,
         );
+        const sanitizedAntigravityDir = sanitizeDir(
+          mergedSettings.antigravityConfigDir,
+        );
         const previousAppDir = initialAppConfigDir;
         const previousClaudeDir = sanitizeDir(data?.claudeConfigDir);
         const previousCodexDir = sanitizeDir(data?.codexConfigDir);
         const previousGeminiDir = sanitizeDir(data?.geminiConfigDir);
         const previousOpencodeDir = sanitizeDir(data?.opencodeConfigDir);
+        const previousAntigravityDir = sanitizeDir(data?.antigravityConfigDir);
 
         const payload: Settings = {
           ...mergedSettings,
@@ -258,6 +267,7 @@ export function useSettings(): UseSettingsResult {
           codexConfigDir: sanitizedCodexDir,
           geminiConfigDir: sanitizedGeminiDir,
           opencodeConfigDir: sanitizedOpencodeDir,
+          antigravityConfigDir: sanitizedAntigravityDir,
           language: mergedSettings.language,
         };
 
@@ -359,11 +369,14 @@ export function useSettings(): UseSettingsResult {
         const codexDirChanged = sanitizedCodexDir !== previousCodexDir;
         const geminiDirChanged = sanitizedGeminiDir !== previousGeminiDir;
         const opencodeDirChanged = sanitizedOpencodeDir !== previousOpencodeDir;
+        const antigravityDirChanged =
+          sanitizedAntigravityDir !== previousAntigravityDir;
         if (
           claudeDirChanged ||
           codexDirChanged ||
           geminiDirChanged ||
-          opencodeDirChanged
+          opencodeDirChanged ||
+          antigravityDirChanged
         ) {
           const syncResult = await syncCurrentProvidersLiveSafe();
           if (!syncResult.ok) {

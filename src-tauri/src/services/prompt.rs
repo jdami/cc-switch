@@ -18,11 +18,20 @@ fn get_unix_timestamp() -> Result<i64, AppError> {
 pub struct PromptService;
 
 impl PromptService {
+    /// 辅助函数：将应用类型转换为实际存储类型（Antigravity 共享 Gemini 的规则）
+    fn get_storage_app(app: AppType) -> AppType {
+        match app {
+            AppType::Antigravity => AppType::Gemini,
+            _ => app,
+        }
+    }
+
     pub fn get_prompts(
         state: &AppState,
         app: AppType,
     ) -> Result<IndexMap<String, Prompt>, AppError> {
-        state.db.get_prompts(app.as_str())
+        let storage_app = Self::get_storage_app(app);
+        state.db.get_prompts(storage_app.as_str())
     }
 
     pub fn upsert_prompt(
@@ -31,23 +40,24 @@ impl PromptService {
         _id: &str,
         prompt: Prompt,
     ) -> Result<(), AppError> {
+        let storage_app = Self::get_storage_app(app);
         // 检查是否为已启用的提示词
         let is_enabled = prompt.enabled;
 
-        state.db.save_prompt(app.as_str(), &prompt)?;
+        state.db.save_prompt(storage_app.as_str(), &prompt)?;
 
         if is_enabled {
             // 启用提示词：写入内容到文件
-            let target_path = prompt_file_path(&app)?;
+            let target_path = prompt_file_path(&storage_app)?;
             write_text_file(&target_path, &prompt.content)?;
         } else {
             // 禁用提示词：检查是否还有其他已启用的提示词
-            let prompts = state.db.get_prompts(app.as_str())?;
+            let prompts = state.db.get_prompts(storage_app.as_str())?;
             let any_enabled = prompts.values().any(|p| p.enabled);
 
             if !any_enabled {
                 // 所有提示词都已禁用，清空文件
-                let target_path = prompt_file_path(&app)?;
+                let target_path = prompt_file_path(&storage_app)?;
                 if target_path.exists() {
                     write_text_file(&target_path, "")?;
                 }
@@ -58,7 +68,8 @@ impl PromptService {
     }
 
     pub fn delete_prompt(state: &AppState, app: AppType, id: &str) -> Result<(), AppError> {
-        let prompts = state.db.get_prompts(app.as_str())?;
+        let storage_app = Self::get_storage_app(app);
+        let prompts = state.db.get_prompts(storage_app.as_str())?;
 
         if let Some(prompt) = prompts.get(id) {
             if prompt.enabled {
@@ -66,17 +77,18 @@ impl PromptService {
             }
         }
 
-        state.db.delete_prompt(app.as_str(), id)?;
+        state.db.delete_prompt(storage_app.as_str(), id)?;
         Ok(())
     }
 
     pub fn enable_prompt(state: &AppState, app: AppType, id: &str) -> Result<(), AppError> {
+        let storage_app = Self::get_storage_app(app);
         // 回填当前 live 文件内容到已启用的提示词，或创建备份
-        let target_path = prompt_file_path(&app)?;
+        let target_path = prompt_file_path(&storage_app)?;
         if target_path.exists() {
             if let Ok(live_content) = std::fs::read_to_string(&target_path) {
                 if !live_content.trim().is_empty() {
-                    let mut prompts = state.db.get_prompts(app.as_str())?;
+                    let mut prompts = state.db.get_prompts(storage_app.as_str())?;
 
                     // 尝试回填到当前已启用的提示词
                     if let Some((enabled_id, enabled_prompt)) = prompts
@@ -88,7 +100,7 @@ impl PromptService {
                         enabled_prompt.content = live_content.clone();
                         enabled_prompt.updated_at = Some(timestamp);
                         log::info!("回填 live 提示词内容到已启用项: {enabled_id}");
-                        state.db.save_prompt(app.as_str(), enabled_prompt)?;
+                        state.db.save_prompt(storage_app.as_str(), enabled_prompt)?;
                     } else {
                         // 没有已启用的提示词，则创建一次备份（避免重复备份）
                         let content_exists = prompts
@@ -113,7 +125,7 @@ impl PromptService {
                                 updated_at: Some(timestamp),
                             };
                             log::info!("回填 live 提示词内容，创建备份: {backup_id}");
-                            state.db.save_prompt(app.as_str(), &backup_prompt)?;
+                            state.db.save_prompt(storage_app.as_str(), &backup_prompt)?;
                         }
                     }
                 }
@@ -121,7 +133,7 @@ impl PromptService {
         }
 
         // 启用目标提示词并写入文件
-        let mut prompts = state.db.get_prompts(app.as_str())?;
+        let mut prompts = state.db.get_prompts(storage_app.as_str())?;
 
         for prompt in prompts.values_mut() {
             prompt.enabled = false;
@@ -130,21 +142,22 @@ impl PromptService {
         if let Some(prompt) = prompts.get_mut(id) {
             prompt.enabled = true;
             write_text_file(&target_path, &prompt.content)?; // 原子写入
-            state.db.save_prompt(app.as_str(), prompt)?;
+            state.db.save_prompt(storage_app.as_str(), prompt)?;
         } else {
             return Err(AppError::InvalidInput(format!("提示词 {id} 不存在")));
         }
 
         // Save all prompts to disable others
         for (_, prompt) in prompts.iter() {
-            state.db.save_prompt(app.as_str(), prompt)?;
+            state.db.save_prompt(storage_app.as_str(), prompt)?;
         }
 
         Ok(())
     }
 
     pub fn import_from_file(state: &AppState, app: AppType) -> Result<String, AppError> {
-        let file_path = prompt_file_path(&app)?;
+        let storage_app = Self::get_storage_app(app);
+        let file_path = prompt_file_path(&storage_app)?;
 
         if !file_path.exists() {
             return Err(AppError::Message("提示词文件不存在".to_string()));
@@ -168,12 +181,13 @@ impl PromptService {
             updated_at: Some(timestamp),
         };
 
-        Self::upsert_prompt(state, app, &id, prompt)?;
+        Self::upsert_prompt(state, storage_app, &id, prompt)?;
         Ok(id)
     }
 
     pub fn get_current_file_content(app: AppType) -> Result<Option<String>, AppError> {
-        let file_path = prompt_file_path(&app)?;
+        let storage_app = Self::get_storage_app(app);
+        let file_path = prompt_file_path(&storage_app)?;
         if !file_path.exists() {
             return Ok(None);
         }
@@ -188,13 +202,14 @@ impl PromptService {
         state: &AppState,
         app: AppType,
     ) -> Result<usize, AppError> {
+        let storage_app = Self::get_storage_app(app.clone());
         // 幂等性保护：该应用已有提示词则跳过
-        let existing = state.db.get_prompts(app.as_str())?;
+        let existing = state.db.get_prompts(storage_app.as_str())?;
         if !existing.is_empty() {
             return Ok(0);
         }
 
-        let file_path = prompt_file_path(&app)?;
+        let file_path = prompt_file_path(&storage_app)?;
 
         // 检查文件是否存在
         if !file_path.exists() {
@@ -234,7 +249,7 @@ impl PromptService {
         };
 
         // 保存到数据库
-        state.db.save_prompt(app.as_str(), &prompt)?;
+        state.db.save_prompt(storage_app.as_str(), &prompt)?;
 
         log::info!("自动导入完成: {}", app.as_str());
         Ok(1)

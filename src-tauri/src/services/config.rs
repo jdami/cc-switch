@@ -88,6 +88,7 @@ impl ConfigService {
         Self::sync_current_provider_for_app(config, &AppType::Claude)?;
         Self::sync_current_provider_for_app(config, &AppType::Codex)?;
         Self::sync_current_provider_for_app(config, &AppType::Gemini)?;
+        Self::sync_current_provider_for_app(config, &AppType::Antigravity)?;
         Ok(())
     }
 
@@ -125,6 +126,9 @@ impl ConfigService {
             AppType::OpenCode => {
                 // OpenCode uses additive mode, no live sync needed
                 // OpenCode providers are managed directly in the config file
+            }
+            AppType::Antigravity => {
+                // Not supported yet
             }
         }
 

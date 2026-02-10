@@ -191,6 +191,9 @@ pub(crate) fn write_live_snapshot(app_type: &AppType, provider: &Provider) -> Re
                 }
             }
         }
+        AppType::Antigravity => {
+            // Antigravity doesn't support live config sync yet
+        }
     }
     Ok(())
 }
@@ -340,6 +343,10 @@ pub fn read_live_settings(app_type: AppType) -> Result<Value, AppError> {
             let config = read_opencode_config()?;
             Ok(config)
         }
+        AppType::Antigravity => {
+            // Antigravity doesn't support live settings reading yet
+            Ok(json!({}))
+        }
     }
 }
 
@@ -432,6 +439,10 @@ pub fn import_default_config(state: &AppState, app_type: AppType) -> Result<bool
             // For OpenCode, we return the full config - but note that OpenCode
             // uses additive mode, so importing defaults works differently
             read_opencode_config()?
+        }
+        AppType::Antigravity => {
+            // Antigravity fallback
+            json!({})
         }
     };
 

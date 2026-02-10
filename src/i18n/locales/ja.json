@@ -287,7 +287,8 @@
       "claudeDesc": "Anthropic Claude Code CLI",
       "codexDesc": "OpenAI Codex CLI",
       "geminiDesc": "Google Gemini CLI",
-      "opencodeDesc": "OpenCode CLI"
+      "opencodeDesc": "OpenCode CLI",
+      "antigravityDesc": "Antigravity CLI"
     },
     "skillSync": {
       "title": "スキル同期方式",
@@ -337,10 +338,13 @@
     "geminiConfigDirDescription": "Gemini の設定ディレクトリ（.env）を上書きします。",
     "opencodeConfigDir": "OpenCode 設定ディレクトリ",
     "opencodeConfigDirDescription": "OpenCode の設定ディレクトリ（opencode.json）を上書きします。",
+    "antigravityConfigDir": "Antigravity 設定ディレクトリ",
+    "antigravityConfigDirDescription": "Antigravity の設定ディレクトリを上書きします。",
     "browsePlaceholderClaude": "例: /home/<your-username>/.claude",
     "browsePlaceholderCodex": "例: /home/<your-username>/.codex",
     "browsePlaceholderGemini": "例: /home/<your-username>/.gemini",
     "browsePlaceholderOpencode": "例: /home/<your-username>/.config/opencode",
+    "browsePlaceholderAntigravity": "例: /home/<your-username>/.gemini/antigravity",
     "browseDirectory": "ディレクトリを選択",
     "resetDefault": "デフォルトに戻す（保存後に反映）",
     "checkForUpdates": "アップデートを確認",
@@ -405,7 +409,8 @@
     "claude": "Claude",
     "codex": "Codex",
     "gemini": "Gemini",
-    "opencode": "OpenCode"
+    "opencode": "OpenCode",
+    "antigravity": "Antigravity"
   },
   "sessionManager": {
     "title": "セッション管理",
@@ -854,7 +859,8 @@
         "claude": "Claude",
         "codex": "Codex",
         "gemini": "Gemini",
-        "opencode": "OpenCode"
+        "opencode": "OpenCode",
+        "antigravity": "Antigravity"
       }
     },
     "userLevelPath": "ユーザーレベルの MCP パス",
@@ -1167,7 +1173,8 @@
       "claude": "Claude",
       "codex": "Codex",
       "gemini": "Gemini",
-      "opencode": "OpenCode"
+      "opencode": "OpenCode",
+      "antigravity": "Antigravity"
     },
     "installFromZip": {
       "button": "ZIP からインストール",

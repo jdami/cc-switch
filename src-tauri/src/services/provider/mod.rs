@@ -515,6 +515,7 @@ impl ProviderService {
             AppType::Codex => Self::extract_codex_common_config(&provider.settings_config),
             AppType::Gemini => Self::extract_gemini_common_config(&provider.settings_config),
             AppType::OpenCode => Self::extract_opencode_common_config(&provider.settings_config),
+            AppType::Antigravity => Ok(String::new()),
         }
     }
 
@@ -528,6 +529,7 @@ impl ProviderService {
             AppType::Codex => Self::extract_codex_common_config(settings_config),
             AppType::Gemini => Self::extract_gemini_common_config(settings_config),
             AppType::OpenCode => Self::extract_opencode_common_config(settings_config),
+            AppType::Antigravity => Ok(String::new()),
         }
     }
 
@@ -861,6 +863,16 @@ impl ProviderService {
                     ));
                 }
             }
+            AppType::Antigravity => {
+                // Antigravity validation - must be an object
+                if !provider.settings_config.is_object() {
+                    return Err(AppError::localized(
+                        "provider.antigravity.settings.not_object",
+                        "Antigravity 配置必须是 JSON 对象",
+                        "Antigravity configuration must be a JSON object",
+                    ));
+                }
+            }
         }
 
         // Validate and clean UsageScript configuration (common for all app types)
@@ -1031,6 +1043,10 @@ impl ProviderService {
                     .to_string();
 
                 Ok((api_key, base_url))
+            }
+            AppType::Antigravity => {
+                // Antigravity fallback
+                Ok((String::new(), String::new()))
             }
         }
     }

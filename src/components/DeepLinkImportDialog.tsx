@@ -225,7 +225,7 @@ export function DeepLinkImportDialog() {
 
   // Parse config file content for display
   interface ParsedConfig {
-    type: "claude" | "codex" | "gemini";
+    type: "claude" | "codex" | "gemini" | "antigravity";
     env?: Record<string, string>;
     auth?: Record<string, string>;
     tomlConfig?: string;
@@ -269,6 +269,12 @@ export function DeepLinkImportDialog() {
         // Gemini 格式: 扁平结构 { GEMINI_API_KEY: ..., GEMINI_BASE_URL: ... }
         return {
           type: "gemini",
+          env: parsed as Record<string, string>,
+          raw: parsed,
+        };
+      } else if (request.app === "antigravity") {
+        return {
+          type: "antigravity",
           env: parsed as Record<string, string>,
           raw: parsed,
         };
@@ -589,6 +595,28 @@ export function DeepLinkImportDialog() {
 
                           {/* Gemini config */}
                           {parsedConfig.type === "gemini" &&
+                            parsedConfig.env && (
+                              <div className="space-y-1.5">
+                                {Object.entries(parsedConfig.env).map(
+                                  ([key, value]) => (
+                                    <div
+                                      key={key}
+                                      className="grid grid-cols-2 gap-2 text-xs"
+                                    >
+                                      <span className="font-mono text-muted-foreground truncate">
+                                        {key}
+                                      </span>
+                                      <span className="font-mono truncate">
+                                        {maskValue(key, String(value))}
+                                      </span>
+                                    </div>
+                                  ),
+                                )}
+                              </div>
+                            )}
+
+                          {/* Antigravity config */}
+                          {parsedConfig.type === "antigravity" &&
                             parsedConfig.env && (
                               <div className="space-y-1.5">
                                 {Object.entries(parsedConfig.env).map(

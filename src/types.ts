@@ -160,6 +160,7 @@ export interface VisibleApps {
   codex: boolean;
   gemini: boolean;
   opencode: boolean;
+  antigravity: boolean;
 }
 
 // 应用设置类型（用于设置对话框与 Tauri API）
@@ -193,6 +194,8 @@ export interface Settings {
   geminiConfigDir?: string;
   // 覆盖 OpenCode 配置目录（可选）
   opencodeConfigDir?: string;
+  // 覆盖 Antigravity 配置目录（可选）
+  antigravityConfigDir?: string;
 
   // ===== 当前供应商 ID（设备级）=====
   // 当前 Claude 供应商 ID（优先于数据库 is_current）
@@ -201,6 +204,8 @@ export interface Settings {
   currentProviderCodex?: string;
   // 当前 Gemini 供应商 ID（优先于数据库 is_current）
   currentProviderGemini?: string;
+  // 当前 Antigravity 供应商 ID（可选）
+  currentProviderAntigravity?: string;
 
   // ===== Skill 同步设置 =====
   // Skill 同步方式：auto（默认，优先 symlink）、symlink、copy
@@ -254,6 +259,7 @@ export interface McpApps {
   codex: boolean;
   gemini: boolean;
   opencode: boolean;
+  antigravity: boolean;
 }
 
 // MCP 服务器条目（v3.7.0 统一结构）

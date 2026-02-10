@@ -89,7 +89,7 @@ pub struct ToolVersion {
 
 #[tauri::command]
 pub async fn get_tool_versions() -> Result<Vec<ToolVersion>, String> {
-    let tools = vec!["claude", "codex", "gemini", "opencode"];
+    let tools = vec!["claude", "codex", "gemini", "opencode", "antigravity"];
     let mut results = Vec::new();
 
     // 使用全局 HTTP 客户端（已包含代理配置）
@@ -248,7 +248,7 @@ fn try_get_version_wsl(tool: &str, distro: &str) -> (Option<String>, Option<Stri
 
     // 防御性断言：tool 只能是预定义的值
     debug_assert!(
-        ["claude", "codex", "gemini", "opencode"].contains(&tool),
+        ["claude", "codex", "gemini", "opencode", "antigravity"].contains(&tool),
         "unexpected tool name: {tool}"
     );
 

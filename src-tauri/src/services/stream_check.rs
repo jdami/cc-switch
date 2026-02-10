@@ -240,6 +240,14 @@ impl StreamCheckService {
                     "OpenCode does not support health check yet",
                 ));
             }
+            AppType::Antigravity => {
+                // Antigravity doesn't support stream check yet
+                return Err(AppError::localized(
+                    "antigravity_no_stream_check",
+                    "Antigravity 暂不支持健康检查",
+                    "Antigravity does not support health check yet",
+                ));
+            }
         };
 
         let response_time = start.elapsed().as_millis() as u64;
@@ -566,6 +574,10 @@ impl StreamCheckService {
                 // OpenCode uses models map in settings_config
                 // Try to extract first model from the models object
                 Self::extract_opencode_model(provider).unwrap_or_else(|| "gpt-4o".to_string())
+            }
+            AppType::Antigravity => {
+                // Antigravity fallback
+                "gpt-4o".to_string()
             }
         }
     }

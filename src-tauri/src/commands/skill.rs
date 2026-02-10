@@ -21,6 +21,7 @@ fn parse_app_type(app: &str) -> Result<AppType, String> {
         "codex" => Ok(AppType::Codex),
         "gemini" => Ok(AppType::Gemini),
         "opencode" => Ok(AppType::OpenCode),
+        "antigravity" => Ok(AppType::Antigravity),
         _ => Err(format!("不支持的 app 类型: {app}")),
     }
 }

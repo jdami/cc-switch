@@ -112,6 +112,9 @@ pub fn import_mcp_from_deeplink(
             if target_apps.gemini {
                 merged_apps.gemini = true;
             }
+            if target_apps.antigravity {
+                merged_apps.antigravity = true;
+            }
 
             McpServer {
                 id: existing.id.clone(),
@@ -167,6 +170,7 @@ pub(crate) fn parse_mcp_apps(apps_str: &str) -> Result<McpApps, AppError> {
         codex: false,
         gemini: false,
         opencode: false,
+        antigravity: false,
     };
 
     for app in apps_str.split(',') {
@@ -175,6 +179,7 @@ pub(crate) fn parse_mcp_apps(apps_str: &str) -> Result<McpApps, AppError> {
             "codex" => apps.codex = true,
             "gemini" => apps.gemini = true,
             "opencode" => apps.opencode = true,
+            "antigravity" => apps.antigravity = true,
             other => {
                 return Err(AppError::InvalidInput(format!(
                     "Invalid app in 'apps': {other}"

@@ -73,7 +73,13 @@ const HEADER_HEIGHT = 64; // px
 const CONTENT_TOP_OFFSET = DRAG_BAR_HEIGHT + HEADER_HEIGHT;
 
 const STORAGE_KEY = "cc-switch-last-app";
-const VALID_APPS: AppId[] = ["claude", "codex", "gemini", "opencode"];
+const VALID_APPS: AppId[] = [
+  "claude",
+  "codex",
+  "gemini",
+  "opencode",
+  "antigravity",
+];
 
 const getInitialApp = (): AppId => {
   const saved = localStorage.getItem(STORAGE_KEY) as AppId | null;
@@ -123,6 +129,7 @@ function App() {
     codex: true,
     gemini: true,
     opencode: true,
+    antigravity: true,
   };
 
   const getFirstVisibleApp = (): AppId => {
@@ -130,6 +137,7 @@ function App() {
     if (visibleApps.codex) return "codex";
     if (visibleApps.gemini) return "gemini";
     if (visibleApps.opencode) return "opencode";
+    if (visibleApps.antigravity) return "antigravity";
     return "claude"; // fallback
   };
 

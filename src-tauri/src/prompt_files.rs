@@ -12,14 +12,14 @@ pub fn prompt_file_path(app: &AppType) -> Result<PathBuf, AppError> {
     let base_dir: PathBuf = match app {
         AppType::Claude => get_base_dir_with_fallback(get_claude_settings_path(), ".claude")?,
         AppType::Codex => get_base_dir_with_fallback(get_codex_auth_path(), ".codex")?,
-        AppType::Gemini => get_gemini_dir(),
+        AppType::Gemini | AppType::Antigravity => get_gemini_dir(),
         AppType::OpenCode => get_opencode_dir(),
     };
 
     let filename = match app {
         AppType::Claude => "CLAUDE.md",
         AppType::Codex => "AGENTS.md",
-        AppType::Gemini => "GEMINI.md",
+        AppType::Gemini | AppType::Antigravity => "GEMINI.md",
         AppType::OpenCode => "AGENTS.md",
     };
 
