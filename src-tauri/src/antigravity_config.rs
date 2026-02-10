@@ -11,5 +11,5 @@ pub fn get_antigravity_dir() -> PathBuf {
 
 /// 获取 Antigravity MCP 配置文件路径
 pub fn get_antigravity_mcp_path() -> PathBuf {
-    get_antigravity_dir().join("settings.json")
+    get_antigravity_dir().join("mcp_config.json")
 }
